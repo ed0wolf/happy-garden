@@ -1,4 +1,4 @@
-var menuData = [
+var testData = [
     {
         name: 'Starters',
         dishes: [

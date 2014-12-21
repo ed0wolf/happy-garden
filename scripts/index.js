@@ -4,14 +4,9 @@ var $ = window.jQuery;
 var Dish = (function () {
     'use strict';
     function Dish(dishData) {
-        this.number = dishData.number;
         this.name = dishData.name;
         this.description = dishData.description;
         this.price = dishData.price;
-    }
-        
-    function numberAsDom(number) {
-        return '<span class="dish-number">' + number + '<span>';
     }
     
     function nameAsDom(name) {
@@ -25,7 +20,6 @@ var Dish = (function () {
     
     Dish.prototype.asDom = function () {
         var dishDiv = $('<div>');
-        dishDiv.append(numberAsDom(this.number));
         dishDiv.append(nameAsDom(this.name));
         dishDiv.append(priceAsDom(this.price));
         return dishDiv;
@@ -121,10 +115,9 @@ var Menuzzy = (function () {
     return Menuzzy;
 }());
 
-var menu = new Menuzzy(menuData);
-
 $(function () {
     'use strict';
-    var menuDom = menu.asDom();
-    $('#menuzzy-container').append(menuDom);
+    
+    var menu = new Menuzzy(menuData);
+    $('#menuzzy-container').append(menu.asDom());
 });
