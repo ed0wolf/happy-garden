@@ -1,0 +1,27 @@
+{
+  "name": "menuzzy",
+  "version": "0.0.0",
+  "authors": [
+    "Ed0wolf <Ed0wolf@gmail.com>"
+  ],
+  "description": "fuzzy menu",
+  "main": "src/index.js",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "menu",
+    "fuzzy"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1"
+  }
+}
