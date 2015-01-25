@@ -65,7 +65,13 @@ var Search = (function () {
             var filteredDishes = section.dishes.filter(function (dish) {
                 return new RegExp(searchValue, ['i']).test(dish.name);
             });
-            return new Section({ name: section.name, dishes: filteredDishes });
+            if(filteredDishes.length > 0) {
+              return new Section({ name: section.name, dishes: filteredDishes });
+            } else {
+              return null;
+            }
+        }).filter(function(section) {
+          return section !== null;
         });
     }
     
