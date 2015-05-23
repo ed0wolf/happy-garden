@@ -2,11 +2,47 @@
 var $ = window.jQuery,
     R = window.R;
 
-var Maybe = (function() {
-  function Maybe(value) {
+Array.prototype.isNothing = function() {
+  return this.length === 0;
+};
 
-  }
-}());
+var Maybe = function(value) {
+  var Nothing = {
+    bind: function(fn) {
+      return this;
+    },
+    isNothing: function() {
+      return true;
+    },
+    val: function() {
+      throw new Error("Cannot call val() on Nothing");
+    },
+    maybe: function(def, fn) {
+      return def;
+    }
+  };
+
+  var Something = function(value) {
+    return {
+      bind: function(fn) {
+        return Maybe(fn.call(this, value));
+      },
+      isNothing: function() {
+        return false;
+      },
+      val: function() {
+        return value;
+      },
+      maybe: function(def, fn) {
+        return fn.call(this, value);
+      }
+    };
+  };
+
+  return typeof value === 'undefined' || value === null || 
+    (typeof value.isNothing !== 'undefined' && value.isNothing()) ?
+    Nothing : Something(value);
+};
 
 var Dish = (function () {
   'use strict';
@@ -71,19 +107,20 @@ var Search = (function () {
   }
 
   function filterDishes(searchValue, sections) {
-
-    return sections.map(function (section) {
-      var filteredDishes = section.dishes.filter(function (dish) {
-        return new RegExp(searchValue, ['i']).test(dish.name);
-      });
-      if(filteredDishes.length > 0) {
-        return new Section({ name: section.name, dishes: filteredDishes });
-      } else {
-        return null;
-      }
-    }).filter(function(section) {
-      return section !== null;
+    var dishFilter = R.filter(function(d) {
+      return new RegExp(searchValue, ['i']).test(d.name);
     });
+
+    var mapSection = R.map(function(s) {
+      return new Section({name: s.name, dishes: dishFilter(s.dishes)});
+    });
+    
+    var sectionFilter = R.filter(function(s) {
+      return !s.dishes.isNothing();
+    });
+
+    var filteredSections = R.compose(sectionFilter, mapSection)(sections);
+    return filteredSections;
   }
 
   Search.prototype.asDom = function () {
